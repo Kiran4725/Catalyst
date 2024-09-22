@@ -1,5 +1,3 @@
-# Catalyst Count
-
 # Description
 This Django web application allows users to log in, upload data from a CSV file to a PostgreSQL database, apply filters to the database using a form, and display the count of records based on the applied filters.
 
