@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="col-12 grid-margin">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Query Builder</h4>
+            <div class="col-12 grid-margin">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Comapany Name
+                                    </label>
+                                    <div class="col-sm-9">
+                                        <span id="Emp_ID_validator" style="color:Red;visibility:hidden;"></span>
+                                        <input type="text" class="form-control form-control-sm" id="Comapany-name" placeholder="Comapany Name"
+                                            autocomplete="off" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Industry</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-select" id="industry-select">
+                                            <option value="">Select Industry</option>
+                                            {% for i in industry_list %}
+                                            <option value="{{i}}">{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Year Founded</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-select" id="year-select">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">City</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-select" id="city-select">
+                                            <option value="">Select City</option>
+                                            {% for i in city_list %}
+                                            <option value="{{i}}">{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">State</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-select" id="state-select">
+                                            <option value="">Select State</option>
+                                            {% for i in state_list %}
+                                            <option value="{{i}}">{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Country</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-select" id="counrty-select">
+                                            <option value="">Select Country</option>
+                                            {% for i in country_list %}
+                                            <option value="{{i}}">{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-end">
+                            <button type="submit" class="btn btn-primary me-2" onclick="filterQuery()">Submit</button>
+                            <button class="btn btn-light" onclick="window.location.href='{{baseURL}}query_builder';">Clear</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+{% block javascript %}
+
+<script>
+    var minYear = '{{min_year_founded}}';
+    var maxYear = '{{max_year_founded}}';
+
+    var select = document.getElementById('year-select');
+
+    // Add a default option
+    var defaultOption = document.createElement('option');
+    defaultOption.text = 'Select Year';
+    defaultOption.value = '';
+
+    defaultOption.selected = true;
+    select.add(defaultOption);
+
+    // Loop through the range of years
+    for (var year = minYear; year <= maxYear; year++) {
+        var option = document.createElement('option');
+        option.value = year;
+        option.text = year;
+        select.add(option);
+    }
+</script>
+
+
+
+<script>
+    function filterQuery() {
+        
+        var companyName = $('#Comapany-name').val();
+        var industry = $('#industry-select').val();
+        var yearFounded = $('#year-select').val();
+        var city = $('#city-select').val();
+        var state = $('#state-select').val();
+        var country = $('#counrty-select').val();
+
+        // Validate form fields
+        if (!companyName && !industry && !yearFounded && !city && !state && !country) {
+            showSweetAlert("Warning", "Please fill at least one field.", "warning");
+            return;
+        }
+
+        // AJAX request
+        $.ajax({
+            url: '{{baseUrl}}query_builder',
+            type: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            data: JSON.stringify({
+                company_name: companyName,
+                industry: industry,
+                year_founded: yearFounded,
+                city: city,
+                state: state,
+                country: country
+            }),
+            success: function (response) {
+                if (response.status) {
+                    showSweetAlert("Success", response.message, "success");
+                } else {
+                    showSweetAlert("Error", "Submission failed: " + response.message, "error");
+                }
+            },
+            error: function (xhr, status, error) {
+                showSweetAlert("Error", "An error occurred while submitting the form.", "error");
+            }
+        });
+    }
+
+    function showSweetAlert(title, message, icon) {
+        Swal.fire({
+            title: title,
+            text: message,
+            icon: icon,
+            confirmButtonText: 'OK'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                location.reload();
+            }
+        });
+    }
+</script>
+
+
+{% endblock %}

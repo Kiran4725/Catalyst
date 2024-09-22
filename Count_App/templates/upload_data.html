@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="col-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Upload Data</h4>
+            <form id="upload-form" enctype="multipart/form-data">
+                <div class="form-group">
+                    <input type="file" name="file" id="csv-file" class="file-upload-default">
+                    <div class="input-group col-xs-12 d-flex align-items-center">
+                        <input type="text" class="form-control file-upload-info" disabled placeholder="Upload CSV File">
+                        <span class="input-group-append ms-2">
+                            <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="form-group mt-3">
+                    <div class="progress">
+                        <div id="progress-bar" class="progress-bar" role="progressbar"
+                            style="width: 0%; background-color: black;" aria-valuenow="0" aria-valuemin="0"
+                            aria-valuemax="100">0%</div>
+                    </div>
+                </div>
+
+                <div class="form-group mt-3">
+                </div>
+            </form>
+            <button type="button" id="submit_data" class="btn btn-primary me-2">Submit</button>
+            <button class="btn btn-light" onclick="window.location.href='{{baseURL}}upload_data';">Clear</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block javascript %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function formatBytes(bytes) {
+        if (bytes === 0) return '0 MB';
+        var k = 1024,
+            sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'],
+            i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    $("#submit_data").click(function (e) {
+        e.preventDefault();
+
+        var file = $("#csv-file")[0].files[0];
+
+        if (!file) {
+            alert("Please select a CSV file to upload");
+            return false;
+        }
+
+        var maxSize = 1 * 1024 * 1024 * 1024; // 1 GB
+        if (file.size > maxSize) {
+            alert("File size exceeds 1GB. Please upload a smaller file.");
+            return false;
+        }
+
+        var formData = new FormData();
+        formData.append('file', file);
+
+        $("#progress-bar").width('0%');
+        $("#progress-bar").html('0%');
+        $("#progress-details").html('Uploaded: 0 MB / ' + formatBytes(file.size));
+
+        $.ajax({
+            url: '{{baseURL}}upload_data',
+            type: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            data: formData,
+            processData: false,
+            contentType: false,
+            xhr: function () {
+                var xhr = new window.XMLHttpRequest();
+
+                
+                xhr.upload.addEventListener("progress", function (evt) {
+                    if (evt.lengthComputable) {
+                        var percentComplete = Math.round((evt.loaded / evt.total) * 100);
+                        if (percentComplete < 100) {
+                            $("#progress-bar").width(percentComplete + '%');
+                            $("#progress-bar").html(percentComplete + '%');
+                        }
+
+                        
+                        var uploadedBytes = formatBytes(evt.loaded);
+                        var totalBytes = formatBytes(evt.total);
+                        $("#progress-details").html('Uploaded: ' + uploadedBytes + ' / ' + totalBytes);
+                    }
+                }, false);
+
+                return xhr;
+            },
+            beforeSend: function () {
+                
+                $("#progress-bar").width('0%').html('0%');
+                $("#progress-details").html('Uploaded: 0 MB / ' + formatBytes(file.size));
+            },
+            success: function (response) {
+                if (response.status) {
+                    
+                    $("#progress-bar").width('100%');
+                    $("#progress-bar").html('100%');
+                    alert("File uploaded successfully!");
+                } else {
+                    alert("File upload failed: " + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert('An error occurred while uploading the file.');
+            }
+        });
+    });
+</script>
+
+{% endblock %}
