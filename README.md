@@ -6,23 +6,23 @@ This Django web application allows users to log in, upload data from a CSV file 
 # Installation
 1. Clone the repository:
    
-    clone https://github.com/Kiran4725/Catalyst.git
+   clone https://github.com/Kiran4725/Catalyst.git
 
-3. Navigate to the project directory:
+2. Navigate to the project directory:
 
     cd Catalyst_Count
 
-4. Create and activate a virtual environment:
+3. Create and activate a virtual environment:
    
     python3 -m venv env
    
     env\Scripts\activate
 
-6. Install the required packages:
+4. Install the required packages:
 
     pip install -r requirements.txt
 
-7. Configure PostgreSQL database:
+5. Configure PostgreSQL database:
 
     DATABASES = {
         'default': {
@@ -39,16 +39,15 @@ This Django web application allows users to log in, upload data from a CSV file 
    
     python manage.py migrate
 
-8. Run the Django development server:
+7. Run the Django development server:
    
     python manage.py runserver
    
 # Output
 
-1.Login Page
+1. Login Page
 
    ![login](https://github.com/user-attachments/assets/60da0dcd-13c4-4569-9b85-886bea50e727)
-
 
 2. Registration Page
    
