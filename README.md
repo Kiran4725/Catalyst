@@ -16,7 +16,7 @@ env\Scripts\activate
 
 4. Install the required packages:
 
-pip install -r requirements.txt
+    pip install -r requirements.txt
 
 5. Configure PostgreSQL database:
 
