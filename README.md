@@ -6,7 +6,7 @@ This Django web application allows users to log in, upload data from a CSV file 
 
 # Installation
 1. Clone the repository:
-clone https://github.com/yourusername/yourproject.git
+clone https://github.com/Kiran4725/Catalyst.git
 
 2. Navigate to the project directory:
 cd yourproject
