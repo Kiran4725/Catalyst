@@ -43,5 +43,29 @@ This Django web application allows users to log in, upload data from a CSV file 
    
     python manage.py runserver
    
-#Output
+# Output
+
+1.Login Page
+
+   ![login](https://github.com/user-attachments/assets/60da0dcd-13c4-4569-9b85-886bea50e727)
+
+
+2. Registration Page
+   
+   ![registration](https://github.com/user-attachments/assets/18b84004-f395-4a7b-9030-f74649e2d0ab)
+
+3. Upload Data
+   
+   ![upload_data](https://github.com/user-attachments/assets/b76a8ada-b77e-4d4d-a45d-7bb147cb1662)
+
+4. Query Builder
+
+   ![query_builder](https://github.com/user-attachments/assets/287ca8b8-c9db-40e4-a7ce-1790b8859fb5)
+
+
+5. Users
+   
+   ![users](https://github.com/user-attachments/assets/643bb5ef-ea26-461d-81fb-15f9d70b4376)
+
+
 
