@@ -10,11 +10,12 @@ This Django web application allows users to log in, upload data from a CSV file 
 
 3. Navigate to the project directory:
 
-    cd yourproject
+    cd Catalyst_Count
 
 4. Create and activate a virtual environment:
    
     python3 -m venv env
+   
     env\Scripts\activate
 
 6. Install the required packages:
@@ -41,4 +42,6 @@ This Django web application allows users to log in, upload data from a CSV file 
 8. Run the Django development server:
    
     python manage.py runserver
+   
+#Output
 
